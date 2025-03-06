@@ -14,7 +14,7 @@ class AttendanceController extends Controller
 {
     use ApiResponseTrait;
 
-   
+
     public function index()
     {
         try {
@@ -46,33 +46,25 @@ class AttendanceController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'users_info_id' => 'required|exists:users_infos,id',
                 'date'          => 'required|date',
                 'in_time'       => 'required|date_format:H:i',
-                'out_time'      => 'required|date_format:H:i|after:in_time',
             ]);
-    
+
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
-    
+
             $data = new attendance();
-            $data->users_info_id = $request->users_info_id;
+            $data->users_id = $request->users_id;
             $data->date = $request->date;
             $data->in_time = $request->in_time;
-            $data->out_time = $request->out_time;
-    
-            
+            $data->out_time = Carbon::now()->format('H:i');
             $data->total_hours =diff_time($data->in_time , $data->out_time);
-    
+
             $data->save();
-    
+
             return $this->sendSuccessResponse('Attendance created successfully', $data);
-    
-        } catch (QueryException $e) {
-            if ($e->errorInfo[1] == 1062) { 
-                return $this->sendErrorResponse('Attendance for this user on the selected date already exists.');
-            }
+
         } catch (\Throwable $th) {
             return $this->sendErrorResponse('An error occurred', $th->getMessage());
         }
@@ -99,17 +91,17 @@ class AttendanceController extends Controller
             return $this->sendSuccessResponse('attendance retervie successfully',$data);
         }catch (\Throwable $th) {
             return $this->sendSuccessResponse($th);
-        }   
+        }
     }
-  
+
     public function update(Request $request, string $id)
     {
-        
+
     }
 
 
     public function destroy(string $id)
     {
-        
+
     }
 }
