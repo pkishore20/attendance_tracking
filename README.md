@@ -13,7 +13,7 @@
 ## Credentials
 - #### User
 - email: kishore@gmail.com
-- psd : kishore@gmail.com
+- psd : password
 
 Project Flow
 
